@@ -1,56 +1,54 @@
 package com.ltp.gradesubmission.service;
 
-import com.ltp.gradesubmission.Constants;
-import com.ltp.gradesubmission.Grade;
-import com.ltp.gradesubmission.repository.GradeRepository;
-
 import java.util.List;
 
-public class GradeService
-{
-    GradeRepository gradeRepository = new GradeRepository();
+import com.ltp.gradesubmission.Constants;
+import com.ltp.gradesubmission.pojo.Grade;
+import com.ltp.gradesubmission.repository.GradeRepository;
 
-    public Grade getGrade(int index)
-    {
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class GradeService {
+
+    @Autowired
+    GradeRepository gradeRepository;
+    
+    public Grade getGrade(int index) {
         return gradeRepository.getGrade(index);
     }
 
-    public void addGrade(Grade grade)
-    {
+    public void addGrade(Grade grade) {
         gradeRepository.addGrade(grade);
     }
 
-    public void upgradeGrade(Grade grade, int index)
-    {
-        gradeRepository.upgradeGrade(grade, index);
+    public void updateGrade(Grade grade, int index) {
+        gradeRepository.updateGrade(grade, index);
     }
-
-    public List<Grade> getGrades()
-    {
+    
+    public List<Grade> getGrades() {
         return gradeRepository.getGrades();
     }
 
-    public int getGradeIndex(String id)
-    {
-        for (int i = 0; i <  getGrades().size(); i++) {
-            if ( getGrades().get(i).getId().equals(id)) return i;
+    public int getGradeIndex(String id) {
+        for (int i = 0; i < getGrades().size(); i++) {
+            if (getGrade(i).getId().equals(id)) return i;
         }
         return Constants.NOT_FOUND;
     }
 
-    public Grade getGradeById(String id)
-    {
+    public Grade getGradeById(String id) {
         int index = getGradeIndex(id);
-        return index == Constants.NOT_FOUND ? new Grade() : getGrade(index));
+        return index == Constants.NOT_FOUND ? new Grade() : getGrade(index);
     }
 
-    public void submiteGrade(Grade grade)
-    {
+    public void submitGrade(Grade grade) {
         int index = getGradeIndex(grade.getId());
         if (index == Constants.NOT_FOUND) {
             addGrade(grade);
         } else {
-            upgradeGrade(grade,index);
+            updateGrade(grade, index);
         }
     }
 }
